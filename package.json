@@ -1,0 +1,18 @@
+{
+  "name": "unisport_alarm-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "open": "^9.1.0",
+    "play-sound": "^1.1.5",
+    "puppeteer": "^19.8.5",
+    "use-sound": "^4.0.1"
+  }
+}
