@@ -23,14 +23,6 @@
       "courseTime": "18:00",
       "active": true,
       "bookingDate": null
-    },
-    {
-      "id": "halleZweiMi",
-      "cssSelector": "#bs_tr4EB9C5B956 > td.bs_sbuch > input",
-      "courseDay": "Wednesday",
-      "courseTime": "18:00",
-      "active": false,
-      "bookingDate": "2024-10-14T13:45:06.341Z"
     }
   ]
 }
