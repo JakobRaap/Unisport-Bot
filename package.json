@@ -10,9 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "open": "^9.1.0",
     "play-sound": "^1.1.5",
-    "puppeteer": "^19.8.5",
+    "puppeteer": "^23.5.3",
     "use-sound": "^4.0.1"
   }
 }
