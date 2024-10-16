@@ -33,8 +33,8 @@ async function bookCourse(courseUrl, bookingButtonSelector) {
   try {
     // Launch Puppeteer
     browser = await puppeteer.launch({
-      headless: false, // Opt into the new headless mode
-      slowMo: 10,
+      headless: true,
+      slowMo: 70,
       devtools: false,
       defaultViewport: null,
       args: [
