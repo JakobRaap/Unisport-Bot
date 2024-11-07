@@ -5,24 +5,24 @@
       "cssSelector": "#bs_tr4EB9C5B97B > td.bs_sbuch > input",
       "courseDay": "Monday",
       "courseTime": "19:30",
-      "active": false,
-      "bookingDate": "2024-10-14T17:30:24.065Z"
+      "active": true,
+      "bookingDate": "2024-11-04T15:53:14.760Z"
     },
     {
       "id": "halleDreiDo",
       "cssSelector": "#bs_tr4EAD310140 > td.bs_sbuch > input",
       "courseDay": "Thursday",
       "courseTime": "21:00",
-      "active": false,
-      "bookingDate": "2024-10-16T17:13:57.838Z"
+      "active": true,
+      "bookingDate": "2024-11-03T08:47:23.644Z"
     },
     {
       "id": "halleZweiDreiDi",
       "cssSelector": "#bs_tr4EB9C5B9E1 > td.bs_sbuch > input",
       "courseDay": "Tuesday",
       "courseTime": "18:00",
-      "active": false,
-      "bookingDate": "2024-10-15T16:01:48.138Z"
+      "active": true,
+      "bookingDate": "2024-10-22T14:34:29.504Z"
     }
   ]
 }

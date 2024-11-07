@@ -10,7 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0",
     "dotenv": "^16.4.5",
+    "node-fetch": "^2.7.0",
     "open": "^9.1.0",
     "play-sound": "^1.1.5",
     "puppeteer": "^23.5.3",

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
-const puppeteer = require("puppeteer");
+const fetch = require("node-fetch");
+const cheerio = require("cheerio");
 const { bookCourse } = require("./automatedBooking");
 const player = require("play-sound")((opts = {}));
 
@@ -83,8 +84,30 @@ function scheduleReactivation(course) {
   }
 }
 
-// Updated scrape function with booking lock
-async function scrape(url, selector, course) {
+// Function to fetch and parse the page
+async function fetchAndParsePage(url) {
+  const response = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0",
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "de,en-US;q=0.7,en;q=0.3",
+      "Upgrade-Insecure-Requests": "1",
+      "Sec-Fetch-Dest": "document",
+      "Sec-Fetch-Mode": "navigate",
+      "Sec-Fetch-Site": "none",
+      "Sec-Fetch-User": "?1",
+      Priority: "u=0, i",
+    },
+    method: "GET",
+  });
+  const html = await response.text();
+  const $ = cheerio.load(html);
+  return $;
+}
+
+// Function to check course availability
+async function checkCourseAvailability($, course) {
   if (!course.active) {
     return;
   }
@@ -95,21 +118,14 @@ async function scrape(url, selector, course) {
     return;
   }
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(0);
-  await page.goto(url);
-
   try {
-    const el = await page.$(selector);
-    if (!el) {
+    const el = $(course.cssSelector);
+    if (!el.length) {
       console.log(`Element not found for course: ${course.id}`);
-      await browser.close();
       return;
     }
 
-    const src = await el.getProperty("value");
-    const srcTxt = await src.jsonValue();
+    const srcTxt = el.val();
 
     console.log(`///${course.id} is currently: ${srcTxt}///`);
 
@@ -118,7 +134,7 @@ async function scrape(url, selector, course) {
       isBooking = true;
       console.log(`Attempting to book course: ${course.id}`);
 
-      await bookCourse(url, selector);
+      await bookCourse(volleyballURL, course.cssSelector);
       console.error(
         `Free spot available for ${course.id}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`
       );
@@ -147,11 +163,9 @@ async function scrape(url, selector, course) {
       isBooking = false;
     }
   } catch (error) {
-    console.error(`Error scraping course ${course.id}:`, error);
+    console.error(`Error checking course ${course.id}:`, error);
     // Ensure the booking lock is released in case of an error
     isBooking = false;
-  } finally {
-    await browser.close();
   }
 }
 
@@ -159,21 +173,17 @@ async function scrape(url, selector, course) {
 const volleyballURL =
   "https://buchung.hochschulsport-hamburg.de/angebote/Wintersemester_2024_2025/_Volleyball.html";
 
-// Function to handle scraping with booking lock
+// Function to handle scraping
 async function handleScraping() {
   try {
     console.log("///////////////////////////////////////");
     const courses = loadCourses();
 
-    for (const course of courses) {
-      // If a booking is in progress, wait until it's done
-      if (isBooking) {
-        console.log("Booking in progress. Waiting to continue scraping...");
-        return;
-      }
+    // Fetch and parse the page once
+    const $ = await fetchAndParsePage(volleyballURL);
 
-      // Start scraping the course
-      await scrape(volleyballURL, course.cssSelector, course);
+    for (const course of courses) {
+      await checkCourseAvailability($, course);
     }
 
     console.log("///////////////////////////////////////");
@@ -182,7 +192,7 @@ async function handleScraping() {
   }
 }
 
-// Initialize the interval using recursive setTimeout for better control
+// Initialize the interval using setInterval
 function startScrapingTimer(intervalMs) {
   const timer = setInterval(() => {
     handleScraping();
