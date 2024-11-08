@@ -1,6 +1,7 @@
-// scrapers.js
 require("dotenv").config();
 const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path");
 
 // Destructure environment variables
 const { EMAIL, PASSWORD } = process.env;
@@ -25,7 +26,8 @@ const SELECTORS = {
   termsAndConditions: "#bs_bed > label:nth-child(1) > input:nth-child(1)",
   finalizeBookingButton: "#bs_submit",
   submitBookingButton: "div.bs_right > input:nth-child(1)",
-  bookingStatus: "#booking_status_selector", // Replace with actual selector
+  notSuccessfulText: "#bs_form_main > div > div > div.bs_text_red.bs_text_big",
+  alreadyBookedText: ".bs_meldung > div:nth-child(2)",
 };
 
 async function bookCourse(courseUrl, bookingButtonSelector) {
@@ -33,8 +35,8 @@ async function bookCourse(courseUrl, bookingButtonSelector) {
   try {
     // Launch Puppeteer
     browser = await puppeteer.launch({
-      headless: false,
-      slowMo: 70,
+      headless: true,
+      slowMo: 90,
       devtools: false,
       defaultViewport: null,
       args: [
@@ -152,20 +154,71 @@ async function bookCourse(courseUrl, bookingButtonSelector) {
     });
     await newPage.click(SELECTORS.submitBookingButton);
     console.log("Submitted the booking.");
+
+    // Check for unsuccessful booking message
+    if (await newPage.$(SELECTORS.notSuccessfulText)) {
+      // Ensure the directory exists
+      const screenshotDir = path.join(__dirname, "booking-screenshots");
+      if (!fs.existsSync(screenshotDir)) {
+        fs.mkdirSync(screenshotDir, { recursive: true });
+      }
+
+      await newPage.screenshot({
+        path: path.join(
+          screenshotDir,
+          "booking-confirmation" + Date.now() + ".png"
+        ),
+      });
+
+      if (await newPage.$(SELECTORS.alreadyBookedText)) {
+        // Get the text content of the page
+        const pageTextContent = await newPage.evaluate(
+          () => document.body.innerText
+        );
+
+        if (
+          pageTextContent.includes(
+            "Sie sind für dieses Angebot bereits seit"
+          )
+        ) {
+          console.error("Course is already booked.");
+          await browser.close();
+          return true;
+        }
+      }
+
+      console.error("Booking was not successful.");
+      await browser.close();
+      return false;
+    }
+
+    console.log("Booking was successful.");
     await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // Ensure the directory exists
+    const screenshotDir = path.join(__dirname, "booking-screenshots");
+    if (!fs.existsSync(screenshotDir)) {
+      fs.mkdirSync(screenshotDir, { recursive: true });
+    }
+
     await newPage.screenshot({
-      path: "booking-confirmation" + Date.now() + ".png",
+      path: path.join(
+        screenshotDir,
+        "booking-confirmation" + Date.now() + ".png"
+      ),
     });
 
     // Close the browser
     await browser.close();
     console.log("Browser closed.");
+    return true;
   } catch (error) {
     console.error("An error occurred during the scraping process:", error);
     if (browser) {
       await browser.close();
       console.log("Browser closed due to an error.");
     }
+    return false;
   }
 }
 

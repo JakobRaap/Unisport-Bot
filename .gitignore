@@ -1,5 +1,5 @@
 # .gitignore
 .env
-
+.env_copy
 # Node
 /node_modules

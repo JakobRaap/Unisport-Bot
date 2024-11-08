@@ -3,7 +3,7 @@ const path = require("path");
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 const { bookCourse } = require("./automatedBooking");
-const player = require("play-sound")((opts = {}));
+const logger = require("./logger"); // Import the logger
 
 // Path to courses.json
 const coursesPath = path.join(__dirname, "courses.json");
@@ -69,16 +69,16 @@ function scheduleReactivation(course) {
         targetCourse.active = true;
         targetCourse.bookingDate = null;
         saveCourses(courses);
-        console.log(`Reactivated course: ${targetCourse.id}`);
+        logger.info(`Reactivated course: ${targetCourse.id}`);
       }
     }, timeUntilReactivation);
-    console.log(
+    logger.info(
       `Scheduled reactivation for course: ${course.id} in ${Math.round(
         timeUntilReactivation / 1000
       )} seconds`
     );
   } else {
-    console.warn(
+    logger.warn(
       `Reactivation time for course ${course.id} is in the past. Skipping scheduling.`
     );
   }
@@ -114,58 +114,64 @@ async function checkCourseAvailability($, course) {
 
   // Check if a booking is already in progress
   if (isBooking) {
-    console.log(`Booking in progress. Skipping course: ${course.id}`);
+    logger.info(`Booking in progress. Skipping course: ${course.id}`);
     return;
   }
 
   try {
     const el = $(course.cssSelector);
     if (!el.length) {
-      console.log(`Element not found for course: ${course.id}`);
+      logger.warn(`Element not found for course: ${course.id}`);
       return;
     }
 
     const srcTxt = el.val();
 
-    console.log(`///${course.id} is currently: ${srcTxt}///`);
+    logger.info(`Course ${course.id} is currently: ${srcTxt}`);
 
     if (srcTxt !== "Warteliste") {
       // Acquire the booking lock
       isBooking = true;
-      console.log(`Attempting to book course: ${course.id}`);
+      logger.setBookingStatus(true);
 
-      await bookCourse(volleyballURL, course.cssSelector);
-      console.error(
-        `Free spot available for ${course.id}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`
+      logger.booking(`Free spot available for course ${course.id}!`);
+      logger.booking(`Attempting to book course: ${course.id}`);
+      const isBookingCourse = await bookCourse(
+        volleyballURL,
+        course.cssSelector
       );
-
-      // Update courses.json
-      const courses = loadCourses();
-      const targetCourse = courses.find((c) => c.id === course.id);
-      if (targetCourse) {
-        targetCourse.active = false;
-        targetCourse.bookingDate = new Date().toISOString();
-        saveCourses(courses);
-        console.log(
-          `Booked course: ${course.id} at ${targetCourse.bookingDate}`
-        );
+      if (isBookingCourse) {
+        logger.success(`Booking successful for course: ${course.id}`);
+      } else {
+        logger.error(`Booking failed for course: ${course.id}`);
       }
 
-      // Play alarm
-      player.play("alarm.mp3", function (err) {
-        if (err) console.error(`Could not play sound: ${err}`);
-      });
+      if (isBookingCourse) {
+        // Update courses.json
+        const courses = loadCourses();
+        const targetCourse = courses.find((c) => c.id === course.id);
+        if (targetCourse) {
+          targetCourse.active = false;
+          targetCourse.bookingDate = new Date().toISOString();
+          saveCourses(courses);
+          logger.success(
+            `Booked course: ${course.id} at ${targetCourse.bookingDate}`
+          );
+        }
 
-      // Schedule reactivation
-      scheduleReactivation(course);
+        // Schedule reactivation
+        scheduleReactivation(course);
+      }
 
       // Release the booking lock
       isBooking = false;
+      logger.setBookingStatus(false);
     }
   } catch (error) {
-    console.error(`Error checking course ${course.id}:`, error);
+    logger.error(`Error checking course ${course.id}: ${error}`);
     // Ensure the booking lock is released in case of an error
     isBooking = false;
+    logger.setBookingStatus(false);
   }
 }
 
@@ -176,7 +182,8 @@ const volleyballURL =
 // Function to handle scraping
 async function handleScraping() {
   try {
-    console.log("///////////////////////////////////////");
+    logger.info("///////////////////////////////////////");
+    logger.info("Starting scraping...");
     const courses = loadCourses();
 
     // Fetch and parse the page once
@@ -186,9 +193,10 @@ async function handleScraping() {
       await checkCourseAvailability($, course);
     }
 
-    console.log("///////////////////////////////////////");
+    logger.info("Finished scraping.");
+    logger.info("///////////////////////////////////////");
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -207,7 +215,7 @@ const timer = startScrapingTimer(scrapingInterval);
 
 // Optional: Handle graceful shutdown
 process.on("SIGINT", () => {
-  console.log("Shutting down gracefully...");
+  logger.warn("Shutting down gracefully...");
   clearInterval(timer);
   process.exit();
 });

@@ -13,8 +13,8 @@
       "cssSelector": "#bs_tr4EAD310140 > td.bs_sbuch > input",
       "courseDay": "Thursday",
       "courseTime": "21:00",
-      "active": true,
-      "bookingDate": "2024-11-03T08:47:23.644Z"
+      "active": false,
+      "bookingDate": "2024-11-08T10:08:53.145Z"
     },
     {
       "id": "halleZweiDreiDi",
