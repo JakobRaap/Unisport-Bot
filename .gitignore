@@ -3,3 +3,4 @@
 .env_copy
 # Node
 /node_modules
+node_modules
