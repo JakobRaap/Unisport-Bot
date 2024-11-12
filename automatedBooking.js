@@ -177,13 +177,17 @@ async function bookCourse(courseUrl, bookingButtonSelector) {
         );
 
         if (
-          pageTextContent.includes(
-            "Sie sind für dieses Angebot bereits seit"
-          )
+          pageTextContent.includes("Sie sind für dieses Angebot bereits seit")
         ) {
           console.error("Course is already booked.");
           await browser.close();
           return true;
+        } else if (
+          pageTextContent.includes("Dieses Angebot ist leider schon ausgebucht")
+        ) {
+          console.error("Course was already booked by another person.");
+          await browser.close();
+          return false;
         }
       }
 
