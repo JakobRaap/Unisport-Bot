@@ -1,0 +1,28 @@
+{
+  "courses": [
+    {
+      "id": "halleDreiMo",
+      "cssSelector": "#bs_tr4EB9C5B97B > td.bs_sbuch > input",
+      "courseDay": "Monday",
+      "courseTime": "19:30",
+      "active": false,
+      "bookingDate": "2025-01-22T16:58:24.392Z"
+    },
+    {
+      "id": "halleDreiDo",
+      "cssSelector": "#bs_tr4EAD310140 > td.bs_sbuch > input",
+      "courseDay": "Thursday",
+      "courseTime": "21:00",
+      "active": false,
+      "bookingDate": "2025-01-30T18:21:01.948Z"
+    },
+    {
+      "id": "halleZweiDreiDi",
+      "cssSelector": "#bs_tr4EB9C5B9E1 > td.bs_sbuch > input",
+      "courseDay": "Tuesday",
+      "courseTime": "18:00",
+      "active": false,
+      "bookingDate": "2024-10-22T14:34:29.504Z"
+    }
+  ]
+}

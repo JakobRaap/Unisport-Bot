@@ -2,27 +2,35 @@
   "courses": [
     {
       "id": "halleDreiMo",
-      "cssSelector": "#bs_tr4EB9C5B97B > td.bs_sbuch > input",
+      "cssSelector": "#bs_trAA5443F8E6 > td:nth-child(9) > input:nth-child(2)",
       "courseDay": "Monday",
       "courseTime": "19:30",
-      "active": true,
-      "bookingDate": "2024-11-04T15:53:14.760Z"
+      "active": false,
+      "bookingDate": "2025-01-22T16:58:24.392Z"
     },
     {
       "id": "halleDreiDo",
-      "cssSelector": "#bs_tr4EAD310140 > td.bs_sbuch > input",
+      "cssSelector": "#bs_trD2B49D6DBB > td:nth-child(9) > input:nth-child(2)",
       "courseDay": "Thursday",
       "courseTime": "21:00",
       "active": false,
-      "bookingDate": "2024-11-08T10:08:53.145Z"
+      "bookingDate": "2025-04-07T16:36:07.306Z"
     },
     {
-      "id": "halleZweiDreiDi",
-      "cssSelector": "#bs_tr4EB9C5B9E1 > td.bs_sbuch > input",
+      "id": "halleDreiFr",
+      "cssSelector": "#bs_trD2B49DF2EC > td:nth-child(9) > input:nth-child(2)",
       "courseDay": "Tuesday",
-      "courseTime": "18:00",
+      "courseTime": "21:00",
+      "active": false,
+      "bookingDate": "2025-04-07T16:36:41.555Z"
+    },
+    {
+      "id": "BeachMo",
+      "cssSelector": "#bs_trD26FEB5D24 > td:nth-child(9) > input:nth-child(2)",
+      "courseDay": "Tuesday",
+      "courseTime": "21:00",
       "active": true,
-      "bookingDate": "2024-10-22T14:34:29.504Z"
+      "bookingDate": "2025-04-07T16:36:41.555Z"
     }
   ]
 }

@@ -176,7 +176,11 @@ async function checkCourseAvailability($, course) {
 }
 
 // URL to scrape
+const beachvolleyballURL =
+  "https://buchung.hochschulsport-hamburg.de/angebote/Sommersemester_2025/_Beachvolleyball.html";
 const volleyballURL =
+  "https://buchung.hochschulsport-hamburg.de/angebote/Sommersemester_2025/_Volleyball.html";
+const volleyballURLwinter =
   "https://buchung.hochschulsport-hamburg.de/angebote/Wintersemester_2024_2025/_Volleyball.html";
 
 // Function to handle scraping
@@ -187,7 +191,7 @@ async function handleScraping() {
     const courses = loadCourses();
 
     // Fetch and parse the page once
-    const $ = await fetchAndParsePage(volleyballURL);
+    const $ = await fetchAndParsePage(beachvolleyballURL);
 
     for (const course of courses) {
       await checkCourseAvailability($, course);
