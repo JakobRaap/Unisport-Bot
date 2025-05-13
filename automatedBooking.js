@@ -15,7 +15,8 @@ if (!EMAIL || !PASSWORD) {
 // Constants for selectors
 const SELECTORS = {
   bookingButton: "#bs_tr4EB9C5B956 > td.bs_sbuch > input",
-  buchenButton: 'input.inlbutton.buchen[value="buchen"]',
+  // @deprecated buchenButton: 'input.inlbutton.buchen[value="buchen"]',
+  buchenButton: ".inlbutton",
   loginDiv: "#bs_pw_anmlink",
   emailInput:
     "#bs_pw_anm > div:nth-child(2) > div:nth-child(2) > input:nth-child(1)",

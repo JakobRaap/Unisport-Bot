@@ -6,14 +6,14 @@
       "courseDay": "Monday",
       "courseTime": "19:30",
       "active": false,
-      "bookingDate": "2025-01-22T16:58:24.392Z"
+      "bookingDate": "2025-05-08T13:12:01.827Z"
     },
     {
       "id": "halleDreiDo",
       "cssSelector": "#bs_trD2B49D6DBB > td:nth-child(9) > input:nth-child(2)",
       "courseDay": "Thursday",
       "courseTime": "21:00",
-      "active": false,
+      "active": true,
       "bookingDate": "2025-04-07T16:36:07.306Z"
     },
     {
@@ -21,16 +21,32 @@
       "cssSelector": "#bs_trD2B49DF2EC > td:nth-child(9) > input:nth-child(2)",
       "courseDay": "Tuesday",
       "courseTime": "21:00",
-      "active": false,
+      "active": true,
       "bookingDate": "2025-04-07T16:36:41.555Z"
     },
     {
       "id": "BeachMo",
       "cssSelector": "#bs_trD26FEB5D24 > td:nth-child(9) > input:nth-child(2)",
-      "courseDay": "Tuesday",
-      "courseTime": "21:00",
+      "courseDay": "Monday",
+      "courseTime": "19:00",
       "active": true,
       "bookingDate": "2025-04-07T16:36:41.555Z"
+    },
+    {
+      "id": "BeachMi",
+      "cssSelector": "#bs_trD26FEB8611 > td:nth-child(9) > input:nth-child(2)",
+      "courseDay": "Wednesday",
+      "courseTime": "16:30",
+      "active": true,
+      "bookingDate": "2025-04-07T16:36:41.555Z"
+    },
+    {
+      "id": "BeachSo",
+      "cssSelector": ".bs_btn_vormerkliste",
+      "courseDay": "Sunday",
+      "courseTime": "16:30",
+      "active": false,
+      "bookingDate": "2025-05-13T08:50:12.117Z"
     }
   ]
 }
